@@ -16,6 +16,7 @@ map<char, int> chess_score = {
  * 
  * @return int 
  */
+
 int State::evaluate(){
   // [TODO] design your own evaluation function
   auto white_board = this->board.board[0];
@@ -30,10 +31,7 @@ int State::evaluate(){
     }
   }
 
-  if (!this->player)
-    return white_score - black_score;
-  else 
-    return black_score - white_score;
+  return white_score - black_score;
 }
 
 
