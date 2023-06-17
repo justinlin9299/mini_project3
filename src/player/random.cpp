@@ -13,7 +13,7 @@ State* root;
  * 
  * @param fin 
  */
-void read_board(std::ifstream& fin) {
+void read_board(std::ifstream& fin) { //不用改動
   Board board;
   int player;
   fin >> player;
@@ -40,7 +40,7 @@ void read_board(std::ifstream& fin) {
  */
 void write_valid_spot(std::ofstream& fout) {
   // Keep updating the output until getting killed.
-  while(true) {
+  while(true) { //基本上要改動在這:怎麼get move;為甚麼while true
     // Choose a random spot.
     auto move = Random::get_move(root, 0);
     fout << move.first.first << " " << move.first.second << " "\
@@ -48,7 +48,7 @@ void write_valid_spot(std::ofstream& fout) {
     
     // Remember to flush the output to ensure the last action is written to file.
     fout.flush();
-    break;
+    break; //可把break拿掉，變每一次輸出都是不同的條件
   }
 }
 
@@ -59,7 +59,7 @@ void write_valid_spot(std::ofstream& fout) {
  * @param argv 
  * @return int 
  */
-int main(int, char** argv) {
+int main(int, char** argv) { // 不用改動
   srand(RANDOM_SEED);
   std::ifstream fin(argv[1]);
   std::ofstream fout(argv[2]);

@@ -4,7 +4,12 @@
 
 #include "./state.hpp"
 #include "../config.hpp"
+#include <map>
+using namespace std;
 
+map<char, int> chess_score = {
+  {'1', 2}, {'2', 6}, {'3', 7}, {'4', 8}, {'5', 20}, {'6', INFINITY}
+};
 
 /**
  * @brief evaluate the state
@@ -13,7 +18,22 @@
  */
 int State::evaluate(){
   // [TODO] design your own evaluation function
-  return 0;
+  auto white_board = this->board.board[0];
+  auto black_board = this->board.board[1];
+  int white_score = 0;
+  int black_score = 0;
+
+  for (int i = 0; i < BOARD_H; i++) {
+    for (int j = 0; j < BOARD_W; j++) {
+      white_score += this->board.board[0][i][j];
+      black_score += this->board.board[1][i][j];
+    }
+  }
+
+  if (!this->player)
+    return white_score - black_score;
+  else 
+    return black_score - white_score;
 }
 
 
