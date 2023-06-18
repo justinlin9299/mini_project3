@@ -1,15 +1,15 @@
 #include <iostream>
 #include <sstream>
 #include <cstdint>
-
+#include <climits>
 #include "./state.hpp"
 #include "../config.hpp"
 #include <map>
 using namespace std;
 
 map<char, int> chess_score = {
-  {'1', 2}, {'2', 6}, {'3', 7}, {'4', 8}, {'5', 20}, {'6', INFINITY}
-};
+  {'1', 2}, {'2', 6}, {'3', 7}, {'4', 8}, {'5', 20}, {'6', 100000} 
+ };
 
 /**
  * @brief evaluate the state
@@ -26,14 +26,13 @@ int State::evaluate(){
 
   for (int i = 0; i < BOARD_H; i++) {
     for (int j = 0; j < BOARD_W; j++) {
-      white_score += this->board.board[0][i][j];
-      black_score += this->board.board[1][i][j];
+      white_score += chess_score[this->board.board[0][i][j]];
+      black_score += chess_score[this->board.board[1][i][j]];
     }
   }
 
   return white_score - black_score;
 }
-
 
 /**
  * @brief return next state after the move
