@@ -2,7 +2,7 @@
 #include <map>
 #include <climits>
 #include "../state/state.hpp"
-#include "./minimax.hpp"
+#include "./alpha_beta.hpp"
 using namespace std;;
 
 /**
@@ -13,16 +13,16 @@ using namespace std;;
  * @return Move 
  */
 
-Move Minimax::get_move(State *state, int depth, int player){
+Move Alpha_Beta::get_move(State *state, int depth, int alpha, int beta, int player){
   if (!state->legal_actions.size()) {
     state -> get_legal_actions();
   }
 
   map<int, Move> heu_and_move;
 
-  for (Move item : state->legal_actions) {
+  for (auto item : state->legal_actions) {
     State* next = state->next_state(item);
-    int heu = Minimax_Evaluate(next, depth, (state->player ^ 1));
+    int heu = AB_Evaluate(next, depth, alpha, beta, (state->player ^ 1));
     heu_and_move[heu] = item;
   }
 
@@ -32,7 +32,7 @@ Move Minimax::get_move(State *state, int depth, int player){
     return ((*heu_and_move.begin()).second);
 }
 
-int Minimax::Minimax_Evaluate(State* next_state, int depth, int player_is_black) {
+int Alpha_Beta::AB_Evaluate(State* next_state, int depth, int alpha, int beta, int player_is_black) {
   int H = 0;
   if (!next_state->legal_actions.size()) {
     next_state->get_legal_actions();
@@ -45,16 +45,22 @@ int Minimax::Minimax_Evaluate(State* next_state, int depth, int player_is_black)
     H = -INT_MAX;
     for (auto next : next_state->legal_actions) {
       State* NEXT = next_state->next_state(next);
-      int HEU = Minimax_Evaluate(NEXT, depth - 1, 1);
-      H = max(H, HEU); 
+      int HEU = AB_Evaluate(NEXT, depth - 1, alpha, beta, 1);
+      H = max(H, HEU);
+      alpha = max(alpha, H);
+      if (beta <= alpha)
+        break; 
     }
   }
   else {
     H = INT_MAX;
     for (auto next : next_state->legal_actions) {
       State* NEXT = next_state->next_state(next);
-      int HEU = Minimax_Evaluate(NEXT, depth - 1, 0);
+      int HEU = AB_Evaluate(NEXT, depth - 1, alpha, beta, 0);
       H = min(H, HEU); 
+      beta = min(beta, H);
+      if (beta <= alpha)
+        break;
     }
   }
   return H;

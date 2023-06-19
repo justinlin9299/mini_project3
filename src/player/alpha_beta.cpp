@@ -2,10 +2,10 @@
 
 #include <iostream>
 #include <fstream>
-
+#include <climits>
 #include "../config.hpp"
 #include "../state/state.hpp"
-#include "../policy/minimax.hpp"
+#include "../policy/alpha_beta.hpp"
 
 
 State* root;
@@ -44,7 +44,7 @@ void write_valid_spot(std::ofstream& fout) {
   // Keep updating the output until getting killed.
   while(true) { //基本上要改動在這:怎麼get move;為甚麼while true
     // Choose a random spot.
-    auto move = Minimax::get_move(root, 3, root->player);
+    auto move = Alpha_Beta::get_move(root, 6, -INT_MAX, INT_MAX, root->player);
     fout << move.first.first << " " << move.first.second << " "\
          << move.second.first << " " << move.second.second << std::endl;
     
