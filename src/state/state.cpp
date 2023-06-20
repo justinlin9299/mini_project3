@@ -7,8 +7,8 @@
 #include <map>
 using namespace std;
 
-map<char, int> chess_score = {
-  {'1', 1}, {'2', 3}, {'3', 3}, {'4', 5}, {'5', 9}, {'6', 100000} 
+int chess_score[7] = {
+  0, 2, 6, 7, 8, 20, 100000 
  };
 
 /**
@@ -16,44 +16,6 @@ map<char, int> chess_score = {
  * 
  * @return int 
  */
-
-int State::evaluate(){
-  // [TODO] design your own evaluation function
-  auto white_board = this->board.board[0];
-  auto black_board = this->board.board[1];
-  int white_score = 0;
-  int black_score = 0;
-
-  for (int i = 0; i < BOARD_H; i++) {
-    for (int j = 0; j < BOARD_W; j++) {
-      white_score += chess_score[this->board.board[0][i][j]];
-      black_score += chess_score[this->board.board[1][i][j]];
-      if (i == 3  && j == 2) {
-        if (white_board[i][j] == '1')
-          white_score += 6;
-        else if (white_board[i][j] == '3')
-          white_score += 4;
-      }
-      if (i == 2 && j == 2) {
-        if (black_board[i][j] == '1')
-          black_score += 6;
-        else if (black_board[i][j] == '3')
-          black_score += 4;
-      }
-    }
-  }
-  if (white_board[5][0] != '2')
-    white_score += 3;
-  if (black_board[0][4] != '2')
-    black_score += 3;
-
-  if (white_board[5][4] == '6')
-    white_score += 5;
-  if (black_board[0][0] == '6')
-    black_score += 5;
-
-  return white_score - black_score;
-}
 
 // int State::evaluate(){
 //   // [TODO] design your own evaluation function
@@ -64,12 +26,71 @@ int State::evaluate(){
 
 //   for (int i = 0; i < BOARD_H; i++) {
 //     for (int j = 0; j < BOARD_W; j++) {
-//       white_score += chess_score[white_board[i][j]];
-//       black_score += chess_score[black_board[i][j]];
+//       white_score += chess_score[this->board.board[0][i][j]];
+//       black_score += chess_score[this->board.board[1][i][j]];
+//       if (i == 3  && j == 2) {
+//         if (white_board[i][j] == '1')
+//           white_score += 6;
+//         else if (white_board[i][j] == '3')
+//           white_score += 4;
+//       }
+//       if (i == 2 && j == 2) {
+//         if (black_board[i][j] == '1')
+//           black_score += 6;
+//         else if (black_board[i][j] == '3')
+//           black_score += 4;
+//       }
 //     }
 //   }
-//   return (white_score - black_score);
+//   if (white_board[5][0] != '2')
+//     white_score += 3;
+//   if (black_board[0][4] != '2')
+//     black_score += 3;
+
+//   if (white_board[5][4] == '6')
+//     white_score += 5;
+//   if (black_board[0][0] == '6')
+//     black_score += 5;
+
+//   return white_score - black_score;
 // }
+
+int State::evaluate(){
+  // [TODO] design your own evaluation function
+  auto white_board = this->board.board[0];
+  auto black_board = this->board.board[1];
+  int white_score = 0;
+  int black_score = 0;
+
+  for (int i = 0; i < BOARD_H; i++) {
+    for (int j = 0; j < BOARD_W; j++) {
+      white_score += chess_score[white_board[i][j]];
+      black_score += chess_score[black_board[i][j]];
+
+      // if (i == 3 && j == 2) {
+      //   if (white_board[i][j] != '0')
+      //     white_score += 5;
+      //   if (black_board[i][j] != '0')
+      //     black_score += 5;
+      // }
+      // if (i == 2 && j == 2) {
+      //   if (white_board[i][j] != '0')
+      //     white_score += 5;
+      //   if (black_board[i][j] != '0')
+      //     black_score += 5;
+      // }
+      // if ((i == 2 && j == 1) || (i == 3 && j == 3) || (i == 2 && j == 3) || (i == 3 && j == 3) \
+      //  || (i == 1 && j == 1) || (i == 1 && i == 3) || (i == 4 && j == 1) || (i == 4 && j == 3)){
+      //   if (white_board[i][j] != '0')
+      //     white_score += 1;
+      //   if (black_board[i][j] != '0')
+      //     black_score += 1;
+      // }
+    }
+  }
+  
+  return (white_score - black_score);
+}
 
 /**
  * @brief return next state after the move
@@ -261,7 +282,7 @@ void State::get_legal_actions(){
       }
     }
   }
-  std::cout << "\n";
+  //std::cout << "\n";
   this->legal_actions = all_actions;
 }
 

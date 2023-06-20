@@ -42,20 +42,23 @@ void read_board(std::ifstream& fin) { //不用改動
  */
 void write_valid_spot(std::ofstream& fout) {
   // Keep updating the output until getting killed.
+  int depth = 1;
   while(true) { //基本上要改動在這:怎麼get move;為甚麼while true
-    // Choose a random spot.
-    auto move = Minimax::get_move(root, 3, root->player);
+    depth ++;
+  //   // Choose a random spot.
+    auto move = Minimax::get_move(root, depth, root->player);
     fout << move.first.first << " " << move.first.second << " "\
          << move.second.first << " " << move.second.second << std::endl;
     
     // Remember to flush the output to ensure the last action is written to file.
     fout.flush();
-    break; //可把break拿掉，變每一次輸出都是不同的條件
-  }
+    //break; //可把break拿掉，變每一次輸出都是不同的條件
+   }
 }
 
 
 /**
+ * 
  * @brief Main function for player
  * 
  * @param argv 

@@ -14,38 +14,58 @@ using namespace std;;
  */
 
 Move Minimax::get_move(State *state, int depth, int player){
-  if (!state->legal_actions.size()) {
-    state -> get_legal_actions();
-  }
 
-  map<int, Move> heu_and_move;
+  state -> get_legal_actions();
+ 
 
+  //map<int, Move> heu_and_move;
+  Move move;
+  int val;
+  if (state->player) 
+    val = INT_MAX;
+  else
+    val = INT_MIN;
+  int eval;
   for (Move item : state->legal_actions) {
     State* next = state->next_state(item);
-    int heu = Minimax_Evaluate(next, depth, (state->player ^ 1));
-    heu_and_move[heu] = item;
+    int evaluate = Minimax_Evaluate(next, depth - 1, 1 - state->player);
+    if(state->player){
+      if(evaluate < val){
+        move = item;
+        val = evaluate;
+      }
+    }
+    else{
+      if(evaluate > val){
+        move = item;
+        val = evaluate;
+      }
+    }
+    //heu_and_move[heu] = item;
   }
-
-  if (!player)
-    return ((*heu_and_move.rbegin()).second);
-  else
-    return ((*heu_and_move.begin()).second);
+  return move;
+  // if (!player)
+  //   return ((*heu_and_move.rbegin()).second);
+  // else
+  //   return ((*heu_and_move.begin()).second);
 }
 
 int Minimax::Minimax_Evaluate(State* next_state, int depth, int player_is_black) {
   int H = 0;
+  
+  if (depth == 0 || !next_state->legal_actions.size()) {
+    return next_state->evaluate();
+  }
   if (!next_state->legal_actions.size()) {
     next_state->get_legal_actions();
   }
-  if (!depth) {
-    return next_state->evaluate();
-  }
 
-  if (!player_is_black) {
-    H = -INT_MAX;
+  if (player_is_black == 0) {
+    H = INT_MIN;
     for (auto next : next_state->legal_actions) {
       State* NEXT = next_state->next_state(next);
-      int HEU = Minimax_Evaluate(NEXT, depth - 1, 1);
+      int HEU = Minimax_Evaluate(NEXT, depth - 1, 1-player_is_black);
+      delete NEXT;
       H = max(H, HEU); 
     }
   }
@@ -53,7 +73,8 @@ int Minimax::Minimax_Evaluate(State* next_state, int depth, int player_is_black)
     H = INT_MAX;
     for (auto next : next_state->legal_actions) {
       State* NEXT = next_state->next_state(next);
-      int HEU = Minimax_Evaluate(NEXT, depth - 1, 0);
+      int HEU = Minimax_Evaluate(NEXT, depth - 1, 1-player_is_black);
+      delete NEXT;
       H = min(H, HEU); 
     }
   }
